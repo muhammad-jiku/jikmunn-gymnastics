@@ -9,8 +9,20 @@ const contactMail = async ({
   email,
   message,
 }: IMailServiceParams): Promise<void> => {
-  if (!name || !email) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  if (!name) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your name is missing here!');
+  }
+  if (!email) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Oops, You forget to provide your email address!'
+    );
+  }
+  if (!message) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You forget to write your valuable words!'
+    );
   }
 
   const htmlContent = `
@@ -22,7 +34,7 @@ const contactMail = async ({
   `;
 
   await EmailHelper.sendEmail({
-    email: `${config.email.smtp_host}`, // Recipient email address
+    email: config.email.smtp_username as string, // Recipient email address
     subject: 'GYM WEBSITE CONTACT',
     html: htmlContent,
   });
